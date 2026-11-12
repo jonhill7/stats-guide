@@ -17,6 +17,7 @@
         <a class="tile" href="#map"><b>Relationship map</b><span>How the distributions turn into each other: sums, limits, transformations.</span></a>
         <a class="tile" href="#clt"><b>CLT lab</b><span>Watch averages of any distribution become normal, and see when they don't.</span></a>
         <a class="tile" href="#cheatsheet"><b>Cheat sheet</b><span>Every PMF/PDF, mean, variance and MGF in one table.</span></a>
+        <a class="tile" href="#tables"><b>Critical-value tables</b><span>z, t, χ² and F tables you can click, with a p-value calculator and picture.</span></a>
       </div>
     </section>
     <h2 class="section-title">Discrete distributions <span class="muted small">(countable values: 0, 1, 2, …)</span></h2>

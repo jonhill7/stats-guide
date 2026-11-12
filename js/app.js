@@ -132,7 +132,7 @@
   // ------------------------------------------------------------ sidebar
   const pages = [
     ['', 'Home', 'home'], ['basics', 'Start here: the basics', 'book'], ['chooser', 'Which distribution?', 'quiz'],
-    ['map', 'Relationship map', 'map'], ['clt', 'Central Limit Theorem lab', 'lab'], ['cheatsheet', 'Formula cheat sheet', 'table'],
+    ['map', 'Relationship map', 'map'], ['clt', 'Central Limit Theorem lab', 'lab'], ['cheatsheet', 'Formula cheat sheet', 'table'], ['tables', 'Critical-value tables', 'table'],
   ];
   function buildSidebar() {
     const sb = $('#sidebar');
@@ -168,6 +168,7 @@
     if (page) { page(main); document.title = (pages.find(p => p[0] === h)?.[1] || 'Guide') + ' · Distributions Guide'; }
     else main.innerHTML = '<p>Page not found. <a href="#home">Go home</a></p>';
     math(main);
+    if (G.glossarize) G.glossarize(main);
   }
   G.route = route;
   window.addEventListener('hashchange', route);
@@ -275,6 +276,7 @@
       <nav class="prevnext">${prevNext(d)}</nav>
     </article>`;
     math(main);
+    if (G.glossarize) G.glossarize(main);
 
     // ---- parameter controls
     const pbox = $('#params');

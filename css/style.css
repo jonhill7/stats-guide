@@ -322,3 +322,38 @@ details.card[open] > summary::before { transform: rotate(90deg); }
 .seg { margin-bottom: 8px; }
 @media (max-width: 700px) { .widget-grid, .two-charts { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .die.roll { animation: none; } }
+
+/* ---------------- glossary hover definitions */
+.term { border-bottom: 1px dotted var(--muted); cursor: help; }
+.term:hover, .term:focus-visible { border-bottom-color: var(--accent); color: var(--accent); outline: none; }
+.term:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 3px; }
+.gloss-tip { position: fixed; z-index: 1000; background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px; font-size: .86rem; line-height: 1.45; box-shadow: 0 8px 28px rgba(0,0,0,.18); pointer-events: auto; }
+.gloss-tip b { display: block; margin-bottom: 3px; color: var(--accent); }
+.gloss-tip[hidden] { display: none; }
+
+/* ---------------- critical-value tables */
+.lookup-grid { display: grid; grid-template-columns: minmax(240px, 1fr) 1.6fr; gap: 20px; align-items: start; }
+@media (max-width: 760px) { .lookup-grid { grid-template-columns: 1fr; } }
+.lookup-controls .field input[type=number] { display: block; width: 100%; margin-top: 5px; font: inherit; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; }
+.lookup-controls #dfBox .field { flex: 1 1 120px; }
+.lookup-controls > .row { margin: -4px 0 12px; }
+.tb-result { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; margin: 4px 0 14px; font-size: .95rem; }
+.tb-result:empty { display: none; }
+.tb-result b { font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; font-size: .8rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+.pill.ok { background: color-mix(in srgb, var(--c3) 22%, transparent); color: var(--text); }
+.pill.bad { background: color-mix(in srgb, var(--c2) 25%, transparent); color: var(--text); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 10px; }
+.tab { font: inherit; font-size: .9rem; font-weight: 600; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); color: var(--muted); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tabpanel[hidden] { display: none; }
+.ctable { border-collapse: collapse; font-size: .84rem; font-variant-numeric: tabular-nums; margin-top: 8px; white-space: nowrap; }
+.ctable th, .ctable td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--border); }
+.ctable tr:first-child th { position: sticky; top: 0; }
+.ctable th { background: var(--panel-2); font-weight: 600; }
+.ctable tr > th:first-child { position: sticky; left: 0; text-align: left; z-index: 1; }
+.ctable td { cursor: pointer; }
+.ctable td:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); outline: 1px solid var(--accent); }
+
