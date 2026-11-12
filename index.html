@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distributions Guide</title>
+<meta name="description" content="An interactive, visual guide to the major probability distributions: formulas, properties, parameters, relationships and uses.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 28 C10 28 11 4 16 4 S22 28 30 28Z' fill='%233b6fd8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="lib/katex/katex.min.css">
+<link rel="stylesheet" href="css/style.css">
+<script src="lib/katex/katex.min.js"></script>
+<script src="lib/katex/auto-render.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <button id="menuBtn" class="icon-btn" aria-label="Toggle navigation">☰</button>
+  <a href="#home" class="brand"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M2 28 C10 28 11 4 16 4 S22 28 30 28Z" fill="currentColor"/></svg> Distributions Guide</a>
+  <div class="spacer"></div>
+  <div class="level-toggle" role="group" aria-label="Explanation level">
+    <button data-level="intro" title="Intuition, examples and core formulas">Intro</button>
+    <button data-level="advanced" title="Adds MGFs, higher moments, derivations, inference">Advanced</button>
+  </div>
+  <button id="themeBtn" class="icon-btn" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+</header>
+<div class="layout">
+  <nav id="sidebar" aria-label="Distributions"></nav>
+  <main id="main"></main>
+</div>
+<script src="js/stats.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/dist-discrete.js"></script>
+<script src="js/dist-continuous.js"></script>
+<script src="js/relations.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
