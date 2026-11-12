@@ -159,6 +159,7 @@
     if (h.startsWith('map-')) { focus = h.slice(4); h = 'map'; }
     G.mapFocus = focus;
     G.onLevel = null;
+    if (G.cleanup) { G.cleanup(); G.cleanup = null; }
     const dist = G.byId[h];
     $$('#sidebar .nav-item').forEach(a => a.classList.toggle('active', dist ? a.dataset.id === h : a.dataset.page === h));
     window.scrollTo(0, 0);
@@ -172,6 +173,8 @@
   window.addEventListener('hashchange', route);
 
   // ------------------------------------------------------------ distribution page
+  const HS_FORMULAS = new Set(['support', 'pdf', 'mean', 'var', 'z', 'def']);
+
   function relatedHTML(d) {
     const rels = G.relations.filter(r => r.from === d.id || r.to === d.id);
     if (!rels.length) return '';
@@ -206,6 +209,7 @@
             <div id="pdfPlot"></div>
             <div class="legend" id="legend"></div>
           </div>
+          <div class="card mech-card" id="mechCard"></div>
           <div class="card plot-card">
             <div class="plot-head"><h3>Cumulative distribution function (CDF)</h3>
               <span class="hint">F(x) = P(X ≤ x): the running total of probability</span></div>
@@ -243,17 +247,30 @@
       </section>
 
       <section class="content">
-        <div class="card prose"><h2>The big idea</h2>${d.intuition}</div>
-        <div class="card prose"><h2>Where it shows up</h2><ul>${d.examples.map(e => `<li>${e}</li>`).join('')}</ul></div>
-        <div class="card prose"><h2>Parameters</h2><table class="ptable">${d.params.map(q => `<tr><th>\\(${q.tex}\\)</th><td>${q.desc}</td><td class="muted nowrap">${q.min} to ${q.maxFrom ? q.maxFrom : q.max}</td></tr>`).join('')}</table>
+        ${d.ex ? `<div class="card prose intro-only worked c-ex"><h2>Worked example</h2>
+          <p class="ex-q"><b>${d.ex.q}</b></p>
+          <ol class="ex-steps">${d.ex.steps.map(x => `<li>${x}</li>`).join('')}</ol>
+          <p class="ex-ans"><b>Answer:</b> ${d.ex.ans}</p>
+          <button class="btn primary" id="tryEx">Show this on the plot ↑</button></div>` : ''}
+        ${d.inf ? `<div class="card prose adv c-inf"><h2>Estimation &amp; software</h2><table class="formulas">
+          <tr><th>Maximum likelihood</th><td>${d.inf.mle}</td></tr>
+          <tr><th>Fisher information</th><td>${d.inf.info}</td></tr>
+          <tr><th>Sufficient statistic</th><td>${d.inf.suff}</td></tr>
+          <tr><th>Conjugate prior</th><td>${d.inf.conj}</td></tr>
+          <tr><th>Exponential family?</th><td>${d.inf.expfam}</td></tr>
+          <tr><th>R</th><td><code>${d.inf.r}</code></td></tr>
+          <tr><th>Python</th><td><code>${d.inf.py}</code></td></tr></table></div>` : ''}
+        <details class="card prose c-idea" id="ideaCard" open><summary><h2>The big idea</h2><span class="adv small muted">click to expand</span></summary>${d.intuition}</details>
+        <div class="card prose c-uses"><h2>Where it shows up</h2><ul>${d.examples.map(e => `<li>${e}</li>`).join('')}</ul></div>
+        <div class="card prose c-params"><h2>Parameters</h2><table class="ptable">${d.params.map(q => `<tr><th>\\(${q.tex}\\)</th><td>${q.desc}</td><td class="muted nowrap">${q.min} to ${q.maxFrom ? q.maxFrom : q.max}</td></tr>`).join('')}</table>
           <p class="small muted">Slider ranges are chosen for exploration; the true parameter space may be larger.</p></div>
-        <div class="card prose"><h2>Formulas &amp; properties</h2>
-          <table class="formulas">${d.formulas.map(f => `<tr class="${f[3] ? 'adv' : ''}"><th>${f[1]}</th><td>\\(\\displaystyle ${f[2]}\\)</td></tr>`).join('')}</table>
-          <p class="intro-only small muted">Switch to <b>Advanced</b> (top right) for skewness, kurtosis, generating functions and more.</p></div>
-        <div class="card prose adv deep"><h2>Deep dive</h2>${d.deep}</div>
-        <div class="card prose intro-only deep-teaser"><h2>Going further</h2><p>There's a graduate-level deep dive on this distribution (derivations, inference, and connections to the rest of statistics). <button class="btn" id="toAdv">Show advanced material</button></p></div>
-        ${d.pitfalls ? `<div class="card prose warn"><h2>Watch out</h2><ul>${d.pitfalls.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
-        <div class="card prose"><h2>Related distributions</h2>${relatedHTML(d)}</div>
+        <div class="card prose c-formulas"><h2><span class="intro-only">Key formulas</span><span class="adv">Formulas &amp; properties</span></h2>
+          <table class="formulas">${d.formulas.map(f => `<tr class="${HS_FORMULAS.has(f[0]) ? '' : 'adv'}"><th>${f[1]}</th><td>\\(\\displaystyle ${f[2]}\\)</td></tr>`).join('')}</table>
+          <p class="intro-only small muted">Grad School mode (top right) adds the CDF, skewness, kurtosis, generating functions and more.</p></div>
+        <div class="card prose adv deep c-deep"><h2>Deep dive</h2>${d.deep}</div>
+        ${d.pitfalls ? `<div class="card prose warn c-warn"><h2>Watch out</h2><ul>${d.pitfalls.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
+        <div class="card prose c-rel"><h2>Related distributions</h2>${relatedHTML(d)}</div>
+        <div class="card prose intro-only deep-teaser c-teaser"><h2>Going further</h2><p>Grad School mode adds a deep dive on this distribution (derivations, estimation, and connections to the rest of statistics), plus the full formula sheet. <button class="btn" id="toAdv">Switch to Grad School</button></p></div>
       </section>
       <nav class="prevnext">${prevNext(d)}</nav>
     </article>`;
@@ -296,6 +313,12 @@
     // ---- charts
     const pdfChart = new P.Chart($('#pdfPlot'), { height: 330 });
     const cdfChart = new P.Chart($('#cdfPlot'), { height: 210 });
+    const mech = G.mountMech ? G.mountMech($('#mechCard'), d, {
+      params: () => st.p, view: () => st.view,
+      push: vals => { for (const x of vals) st.samples.push(x); draw(); },
+    }) : null;
+    if (!mech) $('#mechCard').remove();
+    G.cleanup = () => { if (mech) mech.stop(); };
 
     function defaultAB() {
       const m = d.mean(st.p), v = d.variance(st.p);
@@ -311,6 +334,7 @@
     function paramsChanged() {
       syncParamUI();
       st.samples = [];
+      if (mech) setTimeout(() => mech.reset(), 0);
       if (!st.locked || !st.view) st.view = d.fit(st.p);
       else {
         const f = d.fit(st.p);
@@ -486,7 +510,7 @@
       const rows = [
         ['Mean', d.mean(p), 'Long-run average value, E[X]'],
         ['Standard deviation', sd, 'Typical distance from the mean'],
-        ['Variance', d.variance(p), 'SD squared, Var(X)'],
+        ['Variance', d.variance(p), 'SD squared, Var(X)', 1],
         ['Median', d.median(p), 'Half the probability on each side'],
         ['Mode', mode, 'Most likely value / peak'],
         ['Skewness', sk, 'Asymmetry: > 0 means a longer right tail', 1],
@@ -508,7 +532,7 @@
     }
 
     // ---- wiring
-    $('#resetBtn').addEventListener('click', () => { st.p = d.defaults(); st.view = null; syncParamUI(); st.samples = []; st.view = d.fit(st.p); defaultAB(); draw(); });
+    $('#resetBtn').addEventListener('click', () => { st.p = d.defaults(); st.view = null; syncParamUI(); st.samples = []; st.view = d.fit(st.p); defaultAB(); draw(); if (mech) mech.reset(); });
     $('#fitBtn').addEventListener('click', () => { st.view = d.fit(st.p); draw(); });
     $('#lockAx').addEventListener('change', e => { st.locked = e.target.checked; if (!st.locked) { st.view = d.fit(st.p); draw(); } });
     $('#showSd').addEventListener('change', e => { st.showSd = e.target.checked; draw(); });
@@ -525,8 +549,23 @@
       if (st.samples.length > 200000) st.samples = st.samples.slice(-200000);
       draw();
     }));
-    $('#clearDraw').addEventListener('click', () => { st.samples = []; draw(); });
+    $('#clearDraw').addEventListener('click', () => { st.samples = []; if (mech) mech.clear(); draw(); });
     const toAdv = $('#toAdv'); if (toAdv) toAdv.addEventListener('click', () => setLevel('advanced'));
+    const tryEx = $('#tryEx');
+    if (tryEx) tryEx.addEventListener('click', () => {
+      Object.assign(st.p, d.ex.set);
+      if (d.constrain) d.constrain(st.p);
+      st.mode = d.ex.calc.mode; $('#calcMode').value = st.mode; syncMode();
+      if (d.ex.calc.a != null) { st.a = d.ex.calc.a; $('#calcA').value = st.a; }
+      if (d.ex.calc.b != null) { st.b = d.ex.calc.b; $('#calcB').value = st.b; }
+      st.view = d.fit(st.p);
+      syncParamUI(); st.samples = []; if (mech) mech.reset(); draw();
+      $('.lab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const r = $('#calcResult'); r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash');
+    });
+    const idea = $('#ideaCard');
+    G.onLevel = lv => { idea.open = lv === 'intro'; };
+    G.onLevel(G.level);
 
     syncParamUI();
     st.view = d.fit(st.p);

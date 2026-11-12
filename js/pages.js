@@ -10,7 +10,7 @@
     main.innerHTML = `
     <section class="hero">
       <h1>A visual guide to probability distributions</h1>
-      <p class="lead">Move the sliders, see the shapes change, simulate data, and follow how the major distributions connect to one another. Every page has two layers. <b>Intro</b> gives the intuition, examples and core formulas for a first statistics course. <b>Advanced</b> adds generating functions, higher moments, derivations and inference for graduate work. Switch layers with the toggle at the top right.</p>
+      <p class="lead">Move the sliders, see the shapes change, simulate data, and follow how the major distributions connect to one another. Every page comes in two versions; switch with the toggle at the top right. <b>High School</b> leads with animations, plain-language stories, worked examples and the key formulas. <b>Grad School</b> puts the full formula sheet, estimation theory, software names and a technical deep dive up front.</p>
       <div class="tiles">
         <a class="tile" href="#basics"><b>New to this?</b><span>Random variables, PMF vs PDF, CDFs, mean &amp; variance in 5 minutes.</span></a>
         <a class="tile" href="#chooser"><b>Which distribution?</b><span>Answer a few questions to find the right model for your data.</span></a>
@@ -38,10 +38,12 @@
     main.innerHTML = `
     <article class="prose-page">
       <h1>The basics</h1>
-      <p class="lead">Everything on the distribution pages builds on a handful of ideas. Here they are, with links to try each one.</p>
+      <p class="lead">Everything on the distribution pages builds on a handful of ideas. Each one below has a small experiment you can play with.</p>
 
       <div class="card prose"><h2>1. Random variables</h2>
         <p>A <b>random variable</b> \\(X\\) is a number determined by a random process: the number of heads in 10 flips, tomorrow's high temperature, the time until your bus arrives. A <b>distribution</b> tells you which values \\(X\\) can take and how likely each one is.</p>
+        <p><b>Try it:</b> a die roll is a random variable. Roll it a few times, then a few thousand. Each face's share of rolls settles near its probability, 1/6. That long-run share is what "probability" means.</p>
+        <div class="widget" data-widget="dice"></div>
         <p>Distributions come in families described by a formula with a few adjustable <b>parameters</b>. "Binomial with \\(n = 10, p = 0.5\\)" is one specific member of the binomial family.</p>
         <p class="adv">Formally, \\(X: \\Omega \\to \\mathbb R\\) is a measurable function on a probability space \\((\\Omega, \\mathcal F, P)\\), and its distribution is the pushforward measure \\(P_X(B) = P(X^{-1}(B))\\) on the Borel sets.</p></div>
 
@@ -50,34 +52,41 @@
           <div><h3>Discrete → PMF</h3><p>Values you can list (0, 1, 2, …). The <b>probability mass function</b> gives the probability of each exact value, \\(p(k) = P(X = k)\\), and the bars add up to 1.</p><p>Try: ${L(G.byId.binomial)}, ${L(G.byId.poisson)}.</p></div>
           <div><h3>Continuous → PDF</h3><p>Any value in an interval. The <b>probability density function</b> \\(f(x)\\) is a curve, and probabilities are <b>areas</b> under it: \\(P(a \\le X \\le b) = \\int_a^b f(x)\\,dx\\). The total area is 1.</p><p>Try: ${L(G.byId.normal)}, ${L(G.byId.exponential)}.</p></div>
         </div>
+        <p><b>Where do density curves come from?</b> Measure many people's heights and draw a histogram whose bars have total area 1. With more people and narrower bars, the jagged bar tops smooth out into a curve: the density.</p>
+        <div class="widget" data-widget="bins"></div>
         <p><b>Common confusion:</b> a density is not a probability. \\(f(x)\\) can be greater than 1 (see ${L(G.byId.uniform)} with a narrow interval), and \\(P(X = x) = 0\\) for any single exact value of a continuous variable.</p></div>
 
       <div class="card prose"><h2>3. The CDF</h2>
         <p>The <b>cumulative distribution function</b> \\(F(x) = P(X \\le x)\\) is the running total of probability as you move right. It always rises from 0 to 1. Every distribution page shows it under the PMF/PDF.</p>
         <p>Its most useful property: \\(P(a < X \\le b) = F(b) - F(a)\\). The probability calculator on each page shows that difference as a bracket on the CDF plot.</p>
+        <p><b>Try it:</b> drag the slider. The shaded area to the left of x on the density (top) equals the height of the CDF at x (bottom).</p>
+        <div class="widget" data-widget="cdf"></div>
         <p>Going the other way, the <b>quantile</b> (or percentile) function answers "what value has 95% of the probability below it?". Critical values like \\(z_{0.975} = 1.96\\) are quantiles.</p></div>
 
       <div class="card prose"><h2>4. Center and spread</h2>
         <p>The <b>expected value</b> (mean) is the long-run average: \\(E[X] = \\sum_k k\\,p(k)\\) or \\(\\int x f(x)\\,dx\\). Think of it as the balance point of the distribution.</p>
         <p>The <b>variance</b> \\(\\operatorname{Var}(X) = E[(X - \\mu)^2]\\) measures spread, and the <b>standard deviation</b> \\(\\sigma = \\sqrt{\\operatorname{Var}(X)}\\) is in the same units as \\(X\\). Each page draws the mean and ±1 SD as dashed lines.</p>
         <p>The <b>median</b> splits the probability in half, and the <b>mode</b> is the peak. In a right-skewed distribution, typically mode < median < mean (see ${L(G.byId.lognormal)}).</p>
+        <p><b>Try it:</b> picture the dots sitting on a seesaw. The mean is the point where it balances, so one far-out dot can drag it a long way. The median just counts to the middle, which makes it resistant to outliers.</p>
+        <div class="widget" data-widget="balance"></div>
         <p>Use the <b>Simulate</b> buttons to see the law of large numbers: the sample mean approaches the true mean as you draw more values. On the ${L(G.byId.cauchy)} page it doesn't, because there is no true mean.</p></div>
 
       <div class="card prose"><h2>5. Three kinds of parameters</h2>
         <ul><li><b>Location</b> slides the distribution left/right without changing its shape (normal \\(\\mu\\)).</li>
         <li><b>Scale</b> stretches or squeezes it (normal \\(\\sigma\\), exponential \\(1/\\lambda\\)).</li>
         <li><b>Shape</b> changes the form itself: skew, peaks, tails (gamma \\(\\alpha\\), beta \\(\\alpha,\\beta\\), Weibull \\(k\\), t's \\(\\nu\\)).</li></ul>
+        <div class="widget" data-widget="params"></div>
         <p>Turn on <b>Lock axes</b> (on by default) to see the effect: with the axes fixed, changing a scale parameter visibly stretches the curve.</p></div>
 
-      <div class="card prose adv"><h2>6. Higher moments and generating functions</h2>
+      <div class="card prose adv"><h2>Higher moments and generating functions</h2>
         <p><b>Skewness</b> \\(\\gamma_1 = E[(X-\\mu)^3]/\\sigma^3\\) measures asymmetry. <b>Excess kurtosis</b> \\(\\gamma_2 = E[(X-\\mu)^4]/\\sigma^4 - 3\\) measures tail weight relative to the normal (which has 0). Kurtosis is about the tails, not the "peakedness".</p>
         <p>The <b>moment generating function</b> \\(M_X(t) = E[e^{tX}]\\) (when finite near 0) determines the distribution, and \\(M_X^{(n)}(0) = E[X^n]\\). For independent sums, \\(M_{X+Y} = M_X M_Y\\). That makes it the fastest way to prove that sums of Poissons are Poisson or sums of exponentials are gamma. The <b>characteristic function</b> \\(\\varphi_X(t) = E[e^{itX}]\\) always exists, and is what the CLT proof (Lévy continuity) uses. Discrete distributions also have the PGF \\(G(s) = E[s^X]\\).</p>
         <p>Heavy-tailed distributions (${L(G.byId.lognormal)}, ${L(G.byId.t)}, ${L(G.byId.cauchy)}, ${L(G.byId.pareto)}) have no MGF. The log-normal is an example where all moments exist yet don't determine the distribution.</p></div>
 
-      <div class="card prose adv"><h2>7. Exponential families</h2>
+      <div class="card prose adv"><h2>Exponential families</h2>
         <p>Most distributions here (Bernoulli, binomial with fixed \\(n\\), Poisson, geometric, NB with fixed \\(r\\), normal, exponential, gamma, beta, chi-square, log-normal) can be written as \\(f(x\\mid\\theta) = h(x)\\exp\\{\\eta(\\theta)^\\top T(x) - A(\\theta)\\}\\). Consequences: sufficient statistics \\(T\\) of fixed dimension, \\(\\nabla A\\) gives the moments of \\(T\\), conjugate priors exist, MLEs solve "observed = expected" moment equations, and GLMs have canonical links. The t, Cauchy, Weibull (unknown \\(k\\)), Pareto (unknown \\(x_m\\)), Laplace (unknown \\(\\mu\\)), uniform and hypergeometric are <i>not</i> exponential families.</p></div>
 
-      <div class="card prose"><h2>8. Notation cheat sheet</h2>
+      <div class="card prose"><h2>Notation cheat sheet</h2>
         <table class="ptable">
           <tr><th>\\(X \\sim N(\\mu, \\sigma^2)\\)</th><td>"X has a normal distribution with mean μ and variance σ²"</td></tr>
           <tr><th>iid</th><td>Independent and identically distributed: separate draws from the same distribution</td></tr>
@@ -93,6 +102,7 @@
       <div class="card prose warn"><h2>Parametrization warning</h2>
         <p>The same distribution is often written with different parameters. Exponential and gamma can use a <b>rate</b> (\\(\\lambda\\), \\(\\beta\\)) or a <b>scale</b> (\\(1/\\lambda\\), \\(\\theta\\)). The normal can be given its variance \\(\\sigma^2\\) or its SD \\(\\sigma\\). Geometric and negative binomial can count trials or failures. This guide states its convention on each page. Always check the mean formula in your textbook or software before you plug in numbers.</p></div>
     </article>`;
+    if (G.basicsWidgets) G.basicsWidgets(main);
   };
 
   // ------------------------------------------------------------ Chooser
@@ -383,7 +393,7 @@
     const row = d => `<tr><th>${ui().link(d)}<div class="small muted">\\(${d.notation}\\)</div></th><td>${get(d, 'support')}</td><td>${get(d, 'pdf')}</td><td>${get(d, 'mean')}</td><td>${get(d, 'var')}</td><td class="adv">${get(d, 'mgf')}</td></tr>`;
     const head = '<tr><th>Distribution</th><th>Support</th><th>PMF / PDF</th><th>Mean</th><th>Variance</th><th class="adv">MGF</th></tr>';
     main.innerHTML = `<article class="prose-page wide"><h1>Formula cheat sheet</h1>
-      <p class="lead">All the core formulas in one place. Switch to <b>Advanced</b> to add the moment generating functions. Each name links to its interactive page.</p>
+      <p class="lead">All the core formulas in one place. Switch to <b>Grad School</b> to add the moment generating functions. Each name links to its interactive page.</p>
       <div class="card table-scroll"><h2>Discrete</h2><table class="cheat">${head}${G.dists.filter(d => d.discrete).map(row).join('')}</table></div>
       <div class="card table-scroll"><h2>Continuous</h2><table class="cheat">${head}${G.dists.filter(d => !d.discrete).map(row).join('')}</table></div>
       <div class="card prose"><h2>Useful facts</h2><ul>

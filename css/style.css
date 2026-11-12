@@ -278,3 +278,47 @@ table.cheat tr:first-child th { font-size: .78rem; text-transform: uppercase; le
   .brand span, .brand { font-size: .88rem; }
   main { padding: 18px 16px 40px; }
 }
+
+/* mechanism animations */
+.mech-card .plot-head h3 { font-size: 1rem; }
+.mech-explain { margin: 4px 0 10px; color: var(--muted); font-size: .92rem; max-width: 80ch; }
+canvas.mech-canvas { width: 100%; height: 240px; display: block; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; }
+.mech-controls { margin-top: 10px; }
+.mech-status { font-variant-numeric: tabular-nums; }
+.mech-note { color: var(--c2); margin: 6px 0 0; min-height: 0; }
+.mech-note:empty { display: none; }
+
+/* level-specific layout */
+.content .worked, .content .c-inf { grid-column: 1 / -1; }
+body.level-advanced .c-formulas { order: 1; grid-column: 1 / -1; }
+body.level-advanced .c-inf { order: 2; }
+body.level-advanced .c-deep { order: 3; }
+body.level-advanced .c-idea { order: 4; }
+body.level-advanced .c-uses, body.level-advanced .c-params, body.level-advanced .c-warn, body.level-advanced .c-rel { order: 5; }
+details.card > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 10px; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary h2 { margin: 0 0 .6em; }
+details.card > summary::before { content: '▸'; color: var(--muted); transition: transform .15s; }
+details.card[open] > summary::before { transform: rotate(90deg); }
+.worked { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+.ex-q { font-size: 1.05rem; }
+.ex-steps li { margin: .35em 0; }
+.ex-ans { padding: 8px 12px; background: color-mix(in srgb, var(--c3) 12%, transparent); border-radius: 8px; }
+.calc-result.flash { animation: flash 1.2s ease-out; }
+@keyframes flash { 0% { background: color-mix(in srgb, var(--c2) 35%, transparent); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .calc-result.flash { animation: none; } }
+
+/* start-here widgets */
+.widget { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin: 12px 0 16px; }
+.widget-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: center; }
+.die-box { display: flex; flex-direction: column; gap: 10px; }
+.die { font-size: 84px; line-height: 1; color: var(--accent); }
+.die.roll { animation: roll .45s ease-out; }
+@keyframes roll { 0% { transform: rotate(-200deg) scale(.6); } 100% { transform: none; } }
+.widget-caption { color: var(--muted); margin: 8px 0 0; }
+.widget-caption.big { font-size: 1rem; color: var(--text); }
+.w-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 18px; align-items: end; }
+.two-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.seg { margin-bottom: 8px; }
+@media (max-width: 700px) { .widget-grid, .two-charts { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .die.roll { animation: none; } }

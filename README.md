@@ -14,7 +14,8 @@ An interactive, visual guide to 20 major probability distributions, for everyone
   - approximation overlays (e.g. the normal approximation to the binomial)
   - a live summary of mean, SD, median, mode, skewness and kurtosis
   - sections on intuition, examples, formulas, a deep dive, pitfalls and related distributions
-- **Intro / Advanced toggle.** Intro covers intuition and core formulas. Advanced adds MGFs and characteristic functions, higher moments, derivations, inference, conjugacy and limit theorems.
+- **High School / Grad School toggle.** High School leads with animations, stories, a worked example and the key formulas. Grad School shows the full formula sheet (CDFs, MGFs, higher moments), estimation theory (MLE, Fisher information, conjugate priors), R/SciPy names and a technical deep dive.
+- **"See how it works" animations** on every distribution page show a physical process that generates the distribution (coins, urns, arrival timelines, a flashlight, growth paths…), and every run is added to the histogram.
 - **Other pages:**
   - Basics primer
   - "Which distribution?" chooser
